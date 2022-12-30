@@ -1,0 +1,10 @@
+.cardSpace:nth-child(even) {
+  padding: 1rem;
+}
+.cardSpace:nth-child(odd) {
+  padding: 1rem;
+}
+
+.cardSpace:first-child {
+  padding: 1rem;
+}

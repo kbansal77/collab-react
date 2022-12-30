@@ -1,0 +1,36 @@
+.overlay {
+  color: "white";
+  height: 20%;
+  width: 100%;
+  -webkit-transform: translate(0%, -100%);
+  background-color: rgba(253, 146, 126, 50%);
+  transform: translate(0%, -100%);
+  position: absolute;
+}
+
+.btnoverlay {
+  /* margin-left: auto; */
+  /* background-color: white; */
+  border: 1px solid #fd927e;
+  -webkit-transform: translate(-70%, -10%);
+  transform: translate(-70%, -10%);
+}
+
+.tschip:nth-child(even) {
+  margin: 5px;
+}
+.tschip:nth-child(odd) {
+  margin: 5px 0;
+}
+
+.tschip:first-child {
+  margin: 5px 0;
+}
+
+.sdisc {
+  text-align: justify;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
