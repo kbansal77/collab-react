@@ -6,11 +6,11 @@ body {
   -moz-osx-font-smoothing: grayscale; */
 }
 
-#root{
+/* #root{
     background-image: url(./images/background.png);
     background-color: #cccccc;
     height: 100vh;
-}
+} */
 
 /* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
