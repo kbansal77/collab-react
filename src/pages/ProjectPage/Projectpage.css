@@ -19,7 +19,7 @@
 
 .overlay2 {
   color: "white";
-  height: 20vh;
+  /* height: 20vh; */
   width: 100%;
   -webkit-transform: translate(0%, -100%);
   background-color: rgba(253, 146, 126, 50%);

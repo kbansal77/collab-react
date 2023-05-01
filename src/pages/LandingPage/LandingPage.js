@@ -19,7 +19,6 @@ const LandingPage = () => {
     async function loginhandler(e) {
         e.preventDefault();
         await Gsignup();
-        console.log(isNewUser);
         navigate("/discover");
     }
 

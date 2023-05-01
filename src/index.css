@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* *{
+  background-image: url(./images/background.png);
+} */
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
+  background-image: url(./images/background.png);
+
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
 }

@@ -1,28 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../../components/NavBar/NavBar";
 
 import {
     Container,
     Grid,
-    Tabs,
-    Tab,
-    Box,
-    Typography,
-    Avatar,
     Button,
     Card,
     TextField,
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import axios from "axios";
 import moment from "moment";
+import DatePicker from "react-date-picker";
+import { useNavigate } from "react-router-dom";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
-import DateAdapter from "@mui/lab/AdapterMoment";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+// import DatePicker from "@mui/lab/DatePicker";
+// import DateAdapter from "@mui/lab/AdapterMoment";
+// import LocalizationProvider from "@mui/lab/LocalizationProvider";
 // import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 // import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import { FileUploader } from "react-drag-drop-files";
+
 import { useAuth } from "../../contexts/AuthContext";
+import FormData, {getHeaders} from 'form-data';
 
 const Colleges = [
     {
@@ -4568,8 +4569,128 @@ const Colleges = [
 
 const filter = createFilterOptions();
 
+const fileTypes = ["PDF"];
+
 const EditProfile = () => {
+    const navigate = useNavigate();
+    
     const { currentUser, Gsignup } = useAuth();
+    const [resume, setResume] = useState(null);
+    const handleChange = (file) => {
+        setResume(file);
+    };
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("")
+    const [startDate, setStartDate] = useState(new Date());
+    const [data, setData] = useState({
+        "id": "",
+        "name": "",
+        "photoURL":
+            "",
+        "posts_created": [],
+        "posts_applied": [],
+        "posts_saved": [],
+        "email": "",
+        "graduating_year": "",
+        "degree": "",
+        "college": "",
+        "resume": "",
+        "linkedin": "",
+        "blogs": "",
+        "website": "",
+        "describe": "",
+        "github":""
+    });
+    useEffect(() => {
+        // Update the document title using the browser API
+        getData();
+
+        // setData(response)
+    }, []);
+    console.log(resume)
+
+    const getData = () => {
+        axios
+            .get(`http://127.0.0.1:8000/user/${currentUser.email}/`)
+            .then((res) => {
+                setData(res.data);
+                // setName(res.data["name"])
+
+            });
+    };
+    console.log(data);
+    // let data = new Promise((res,rej)=>{
+    //     let response = axios.get(`http://127.0.0.1:8000/user/${currentUser.email}/`)
+    //     if(response)res(response.data)
+    // })
+    // data.then((result)=>{
+    //     console.log(result)
+    // })
+
+    // if(data){
+
+    // }
+    
+    // const handleNameChange = (e)=>{
+    //     console.log(e.target.value)
+    //     setData({...data, "name":e.target.value})
+    // }
+
+    const updateProfile = async() =>{
+        let d = data
+        delete d.id
+        let posts_created = []
+        let posts_applied = []
+        let posts_saved = []
+
+        if(d["posts_applied"]){
+            d["posts_applied"].forEach((post)=>{
+                posts_applied.push(post["id"])
+            })
+        }
+        if(d["posts_created"]){
+            d["posts_created"].forEach((post)=>{
+                posts_created.push(post["id"])
+            })
+        }
+        if(d["posts_saved"]){
+            d["posts_saved"].forEach((post)=>{
+                posts_saved.push(post["id"])
+            })
+        }
+        d["posts_applied"] = posts_applied
+        d["posts_created"] = posts_created
+        d["posts_saved"] = posts_saved
+        let file = new FormData();
+        file.append('file',resume)
+        console.log(file)
+
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: `http://127.0.0.1:8000/user/uploadResume/${data["email"]}`,
+            data : file
+          };
+        
+        const response = axios.request(config)
+        .then((response) => {
+            d["resume"] = response.data["filename"]
+            console.log(d);
+            axios.put(`http://127.0.0.1:8000/user/${data["email"]}`,d).then((res)=>{
+                console.log(res)
+                if(res.status===200)
+                    navigate('/profile')
+            })
+                    
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        console.log(response)
+        // if(response.status === 200)
+        //     navigate('/profile')
+    }
+
     const [value, setValue] = useState(null);
     return (
         <>
@@ -4586,9 +4707,10 @@ const EditProfile = () => {
                 <Card
                     style={{
                         padding: "1.5rem",
+                        marginBottom:"3rem"
                     }}
                 >
-                    <Grid container justifyContent="center" alignItems="center">
+                    {data && data["name"]?(<><Grid container justifyContent="center" alignItems="center">
                         <Grid
                             items
                             md={3}
@@ -4610,12 +4732,12 @@ const EditProfile = () => {
                             <TextField
                                 id="outlined-title-input"
                                 // label="Post Title"
-                                value={currentUser.displayName}
+                                defaultValue={data["name"]}
                                 style={{
                                     width: "100%",
                                 }}
                                 type="text"
-                                disabled
+                                onChange={(e)=>setData({...data, "name":e.target.value})}
                                 autoComplete="post-title"
                             />
                         </Grid>
@@ -4623,6 +4745,7 @@ const EditProfile = () => {
                     <Grid container justifyContent="center" alignItems="center">
                         <Grid
                             items
+                            // value={data.data.email}
                             md={3}
                             style={{
                                 margin: "1rem 0",
@@ -4642,7 +4765,7 @@ const EditProfile = () => {
                             <TextField
                                 id="outlined-title-input"
                                 // label="Post Title"
-                                value={currentUser.email}
+                                defaultValue={data["email"]}
                                 style={{
                                     width: "100%",
                                 }}
@@ -4677,7 +4800,7 @@ const EditProfile = () => {
                                 }}
                                 dateAdapter={DateAdapter}
                             > */}
-                                {/* <DatePicker
+                            {/* <DatePicker
                                     views={["year"]}
                                     value={value}
                                     minDate={moment()}
@@ -4700,14 +4823,11 @@ const EditProfile = () => {
                                     />
                                 </DemoContainer>
                             </LocalizationProvider> */}
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                style={{
-                                    width: "90%",
-                                }}
-                                type="text"
-                                autoComplete="post-title"
+                            <DatePicker
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                showYearPicker
+                                dateFormat="yyyy"
                             />
                         </Grid>
                         <Grid
@@ -4731,11 +4851,12 @@ const EditProfile = () => {
                             <TextField
                                 id="outlined-title-input"
                                 // label="Post Title"
+                                selected={data["degree"]}
                                 style={{
                                     width: "100%",
                                 }}
                                 type="text"
-                                autoComplete="post-title"
+                                onChange={(e)=>setData({...data, "degree":e.target.value})}
                             />
                         </Grid>
                     </Grid>
@@ -4768,11 +4889,12 @@ const EditProfile = () => {
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        
                                         InputProps={{
                                             ...params.InputProps,
                                             type: "search",
                                         }}
+                                        onSelect={(e)=>setData({...data, "college":e.target.value})}
+                                        defaultValue={data["college"]}
                                     />
                                 )}
                             />
@@ -4806,15 +4928,9 @@ const EditProfile = () => {
                                 margin: "1rem 0",
                             }}
                         >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                style={{
+                            <FileUploader handleChange={handleChange} name="file" multiple={false} types={fileTypes} style={{
                                     width: "100%",
-                                }}
-                                type="text"
-                                autoComplete="post-title"
-                            />
+                                }}/>
                         </Grid>
                     </Grid>
                     <Grid container justifyContent="center" alignItems="center">
@@ -4842,8 +4958,9 @@ const EditProfile = () => {
                                 style={{
                                     width: "100%",
                                 }}
+                                defaultValue={data["linkedin"]}
+                                onChange={(e)=>setData({...data, "linkedin":e.target.value})}
                                 type="text"
-                                autoComplete="post-title"
                             />
                         </Grid>
                     </Grid>
@@ -4872,8 +4989,9 @@ const EditProfile = () => {
                                 style={{
                                     width: "100%",
                                 }}
+                                defaultValue={data["github"]}
                                 type="text"
-                                autoComplete="post-title"
+                                onChange={(e)=>setData({...data, "github":e.target.value})}
                             />
                         </Grid>
                     </Grid>
@@ -4903,7 +5021,8 @@ const EditProfile = () => {
                                     width: "100%",
                                 }}
                                 type="text"
-                                autoComplete="post-title"
+                                defaultValue={data["blogs"]}
+                                onChange={(e)=>setData({...data, "blogs":e.target.value})}
                             />
                         </Grid>
                     </Grid>
@@ -4933,7 +5052,8 @@ const EditProfile = () => {
                                     width: "100%",
                                 }}
                                 type="text"
-                                autoComplete="post-title"
+                                defaultValue={data["website"]}
+                                onChange={(e)=>setData({...data, "website":e.target.value})}
                             />
                         </Grid>
                     </Grid>
@@ -4964,7 +5084,8 @@ const EditProfile = () => {
                                 }}
                                 type="text"
                                 multiline
-                                autoComplete="post-title"
+                                defaultValue={data["describe"]}
+                                onChange={(e)=>setData({...data, "describe":e.target.value})}
                             />
                         </Grid>
                     </Grid>
@@ -4975,10 +5096,11 @@ const EditProfile = () => {
                                 color: "white",
                                 width: "100%",
                             }}
+                            onClick={updateProfile}
                         >
                             Update Profile
                         </Button>
-                    </Grid>
+                    </Grid></>):<></>}
                 </Card>
             </Container>
         </>

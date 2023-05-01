@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { styled } from "@mui/material/styles";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import moment from "moment";
 // import { LocalizationProvider } from "@mui/x-date-pickers";
 // import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -27,7 +27,8 @@ import DateAdapter from "@mui/lab/AdapterMoment";
 import NavBar from "../../components/NavBar/NavBar";
 
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+
 
 function valuetext(value) {
     return `${value}°C`;
@@ -56,17 +57,18 @@ const marks = [
     },
 ];
 
-const NewPost = () => {
-    const navigate = useNavigate();
-    const [chipData, setChipData] = useState([]);
+const EditPost = ({postData}) => {
+    const location = useLocation();
+    console.log(postData)
+    const [data, setData] = useState();
+    const [chipData, setChipData] = useState(postData["tech_stack"]);
     const [tovalue, setToValue] = useState("");
-    const [postType, setPostType] = useState("Project");
+    const [postType, setPostType] = useState(postData["post_type"]);
     const [value, setValue] = useState(null);
-    const [val, setVal] = useState([2019, 2023]);
-    const [venue, setVenue] = useState("Online");
-    const [stipend, setStipend] = useState("No");
-    const [jobOffer, setJobOffer] = useState("No");
-    const [duration, setDuration] = useState("")
+    const [val, setVal] = useState([]);
+    const [venue, setVenue] = useState("");
+    const [stipend, setStipend] = useState("");
+    const [jobOffer, setJobOffer] = useState("");
     
     const { currentUser } = useAuth();
     const minDate = new Date();
@@ -77,10 +79,12 @@ const NewPost = () => {
     const [deadline, setDeadline] = useState();
 
     const [isloading, setIsLoading] = useState(false);
+    let post_title =""
 
     const [postTitle, setPostTitle] = useState("");
     const [postCover, setPostCover] = useState("");
     const [documentLink, setDocumentLink] = useState("");
+    const [duration, setDuration] = useState("")
     const [teamSize, setTeamSize] = useState();
     const [startingDate, setStartingDate] = useState()
     const [websiteLink, setWebsiteLink] = useState("")
@@ -90,6 +94,49 @@ const NewPost = () => {
     const [projectDescription, setProjectDescription] = useState("")
     const startMaxDate = new Date();
     startMaxDate.setDate(startMaxDate.getDate() + 100);
+    // useEffect(() => {
+    //     // Update the document title using the browser API
+    //     getData();
+
+    //     // setData(response)
+    // }, []);
+
+    // const getData = () => {
+    //     axios
+    //         .get(
+    //             `http://127.0.0.1:8000/post/${location["pathname"].replace(
+    //                 "/editpost/",
+    //                 ""
+    //             )}`
+    //         )
+    //         .then((res) => {
+    //             setData(res.data);
+    //         }).then(()=>{
+    //             post_title = data["title"]
+    //             console.log(post_title)
+    //             setPostTitle(data["title"])
+    //             setPostCover(data["postCover"])
+    //             setDeadline(data["deadline"])
+    //             setVal(data["batch"])
+    //             setChipData(data["tech_stack"])
+    //             setValue(data["college"])
+    //             setTeamSize(data["team_size"])
+    //             setProjectDescription(data["project_description"])
+    //             setRoleName(data["role_name"])
+    //             setRoleDescription(data["role_description"])
+    //             setPostType(data["post_type"])
+    //             setDocumentLink(data["document_link"])
+    //             setStartingDate(data["internship_start_date"])
+    //         });
+    // };
+    console.log(data)
+    const navigate = useNavigate();
+    
+
+    // if(data){
+    //     
+
+    // }
 
     const onSubmit = async() =>{
         try{
@@ -661,13 +708,13 @@ const NewPost = () => {
                                 <Grid
                                     items
                                     md={3}
+                                    onChange={(e)=>setDuration(e)}
                                     style={{
                                         margin: "1rem 0",
                                     }}
                                 >
                                     <TextField
                                         id="outlined-cover-input"
-                                        onChange={(e)=>setDuration(e)}
                                         style={{
                                             width: "100%",
                                         }}
@@ -1079,4 +1126,4 @@ const NewPost = () => {
     );
 };
 
-export default NewPost;
+export default EditPost;
