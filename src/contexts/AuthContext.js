@@ -17,25 +17,27 @@ export function useAuth() {
 
 const addNewUser = async (user) => {
     try {
-        const data = {
-            name: user.displayName,
-            photoURL: user.photoURL,
-            posts_created: [],
-            posts_applied: [],
-            posts_saved: [],
-            email: user.email,
-            graduating_year: "",
-            degree: "",
-            college: "",
-            resume: "",
-            linkedin: "",
-            blogs: "",
-            website: "",
-            describe: "",
-        };
-        console.log(data)
-        const response = await axios.post("http://127.0.0.1:8000/user/", data);
-        console.log(response)
+        if(user){
+            const data = {
+                name: user.displayName,
+                photoURL: user.photoURL,
+                posts_created: [],
+                posts_applied: [],
+                posts_saved: [],
+                email: user.email,
+                graduating_year: "",
+                degree: "",
+                college: "",
+                resume: "",
+                linkedin: "",
+                blogs: "",
+                website: "",
+                describe: "",
+            };
+            console.log(data)
+            const response = await axios.post("http://127.0.0.1:8000/user/", data);
+            console.log(response)
+        }
     } catch (error) {
         console.error(error);
     }

@@ -41,6 +41,10 @@ const NavBar = () => {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+    const checkNavigate = () =>{
+        if(location.pathname !== "/")
+            navigate('/discover')
+    }
     return (
         <Container>
             <Grid
@@ -49,7 +53,7 @@ const NavBar = () => {
                 justifyContent="space-between"
                 alignItems="center"
             >
-                <h1 className="collab">COLLAB</h1>
+                <h1 className="collab" onClick={checkNavigate}>COLLAB</h1>
                 {/* <Button
             className="lbtn"
             variant="outlined"

@@ -2,3 +2,7 @@
 /* .collab{
     font-weight: bold
 } */
+
+h1:hover{
+    cursor: pointer;
+}

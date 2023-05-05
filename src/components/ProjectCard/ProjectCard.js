@@ -140,12 +140,12 @@ const ProjectCard = ({ data, user, getData }) => {
                         </>
                     ) : data["applied_by"].includes(user["email"]) ? (
                         <CardActions>
-                            <Button variant="outlined" onClick={handleExpandPost}>Expand To Apply</Button>
+                            <Button variant="outlined" onClick={handleExpandPost}>Expand To Withdraw</Button>
                         </CardActions>
                     ) : (
                         <CardActions>
                             <Button variant="outlined" onClick={handleExpandPost}>
-                                Expand To Withdraw
+                                Expand To Apply
                             </Button>
                         </CardActions>
                     )}

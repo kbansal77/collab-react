@@ -64,8 +64,8 @@ const EditPost = ({postData}) => {
     const [chipData, setChipData] = useState(postData["tech_stack"]);
     const [tovalue, setToValue] = useState("");
     const [postType, setPostType] = useState(postData["post_type"]);
-    const [value, setValue] = useState(null);
-    const [val, setVal] = useState([]);
+    const [value, setValue] = useState(postData["college"]);
+    const [val, setVal] = useState(postData["batch"]);
     const [venue, setVenue] = useState("");
     const [stipend, setStipend] = useState("");
     const [jobOffer, setJobOffer] = useState("");
@@ -76,14 +76,14 @@ const EditPost = ({postData}) => {
 
     const maxDate = new Date();
     maxDate.setDate(maxDate.getDate() + 50);
-    const [deadline, setDeadline] = useState();
+    const [deadline, setDeadline] = useState(postData["deadline"]);
 
     const [isloading, setIsLoading] = useState(false);
     let post_title =""
 
     const [postTitle, setPostTitle] = useState("");
     const [postCover, setPostCover] = useState("");
-    const [documentLink, setDocumentLink] = useState("");
+    const [documentLink, setDocumentLink] = useState(postData["document_link"]);
     const [duration, setDuration] = useState("")
     const [teamSize, setTeamSize] = useState();
     const [startingDate, setStartingDate] = useState()
@@ -232,7 +232,7 @@ const EditPost = ({postData}) => {
                     justifyContent="space-between"
                     alignItems="center"
                 >
-                    <h3>Create New Post</h3>
+                    <h3>Edit Post</h3>
                 </Grid>
                 <Card
                     style={{
@@ -411,7 +411,7 @@ const EditPost = ({postData}) => {
                                 </ListItem>;
                             })} */}
                             <Stack direction="row">
-                                {chipData.map((data, index) => {
+                                {chipData && chipData.map((data, index) => {
                                     return (
                                         <div key={index}>
                                             <Chip
@@ -424,7 +424,7 @@ const EditPost = ({postData}) => {
                                     );
                                 })}
                             </Stack>
-                            {chipData.length < 5 ? (
+                            {chipData && chipData.length < 5 ? (
                                 <TextField
                                     id="outlined-cover-input"
                                     style={{

@@ -61,7 +61,7 @@ const NewPost = () => {
     const [chipData, setChipData] = useState([]);
     const [tovalue, setToValue] = useState("");
     const [postType, setPostType] = useState("Project");
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState("All Colleges");
     const [val, setVal] = useState([2019, 2023]);
     const [venue, setVenue] = useState("Online");
     const [stipend, setStipend] = useState("No");

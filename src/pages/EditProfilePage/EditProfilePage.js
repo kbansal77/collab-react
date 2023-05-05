@@ -7,6 +7,8 @@ import {
     Button,
     Card,
     TextField,
+    MenuItem,
+    Select,
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import axios from "axios";
@@ -23,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { FileUploader } from "react-drag-drop-files";
 
 import { useAuth } from "../../contexts/AuthContext";
-import FormData, {getHeaders} from 'form-data';
+import FormData, { getHeaders } from "form-data";
 
 const Colleges = [
     {
@@ -4573,33 +4575,32 @@ const fileTypes = ["PDF"];
 
 const EditProfile = () => {
     const navigate = useNavigate();
-    
+
     const { currentUser, Gsignup } = useAuth();
     const [resume, setResume] = useState(null);
     const handleChange = (file) => {
         setResume(file);
     };
     const [name, setName] = useState("");
-    const [email, setEmail] = useState("")
-    const [startDate, setStartDate] = useState(new Date());
+    const [email, setEmail] = useState("");
+    const [startDate, setStartDate] = useState("");
     const [data, setData] = useState({
-        "id": "",
-        "name": "",
-        "photoURL":
-            "",
-        "posts_created": [],
-        "posts_applied": [],
-        "posts_saved": [],
-        "email": "",
-        "graduating_year": "",
-        "degree": "",
-        "college": "",
-        "resume": "",
-        "linkedin": "",
-        "blogs": "",
-        "website": "",
-        "describe": "",
-        "github":""
+        id: "",
+        name: "",
+        photoURL: "",
+        posts_created: [],
+        posts_applied: [],
+        posts_saved: [],
+        email: "",
+        graduating_year: "",
+        degree: "",
+        college: "",
+        resume: "",
+        linkedin: "",
+        blogs: "",
+        website: "",
+        describe: "",
+        github: "",
     });
     useEffect(() => {
         // Update the document title using the browser API
@@ -4607,7 +4608,7 @@ const EditProfile = () => {
 
         // setData(response)
     }, []);
-    console.log(resume)
+    console.log(resume);
 
     const getData = () => {
         axios
@@ -4615,7 +4616,6 @@ const EditProfile = () => {
             .then((res) => {
                 setData(res.data);
                 // setName(res.data["name"])
-
             });
     };
     console.log(data);
@@ -4630,67 +4630,87 @@ const EditProfile = () => {
     // if(data){
 
     // }
-    
+
     // const handleNameChange = (e)=>{
     //     console.log(e.target.value)
     //     setData({...data, "name":e.target.value})
     // }
 
-    const updateProfile = async() =>{
-        let d = data
-        delete d.id
-        let posts_created = []
-        let posts_applied = []
-        let posts_saved = []
+    const updateProfile = async () => {
+        let d = data;
+        delete d.id;
+        let posts_created = [];
+        let posts_applied = [];
+        let posts_saved = [];
 
-        if(d["posts_applied"]){
-            d["posts_applied"].forEach((post)=>{
-                posts_applied.push(post["id"])
-            })
+        if (d["posts_applied"]) {
+            d["posts_applied"].forEach((post) => {
+                posts_applied.push(post["id"]);
+            });
         }
-        if(d["posts_created"]){
-            d["posts_created"].forEach((post)=>{
-                posts_created.push(post["id"])
-            })
+        if (d["posts_created"]) {
+            d["posts_created"].forEach((post) => {
+                posts_created.push(post["id"]);
+            });
         }
-        if(d["posts_saved"]){
-            d["posts_saved"].forEach((post)=>{
-                posts_saved.push(post["id"])
-            })
+        if (d["posts_saved"]) {
+            d["posts_saved"].forEach((post) => {
+                posts_saved.push(post["id"]);
+            });
         }
-        d["posts_applied"] = posts_applied
-        d["posts_created"] = posts_created
-        d["posts_saved"] = posts_saved
-        let file = new FormData();
-        file.append('file',resume)
-        console.log(file)
+        d["posts_applied"] = posts_applied;
+        d["posts_created"] = posts_created;
+        d["posts_saved"] = posts_saved;
+        if (data["resume"] === "") {
+            let file = new FormData();
+            file.append("file", resume);
+            console.log(file);
 
-        let config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: `http://127.0.0.1:8000/user/uploadResume/${data["email"]}`,
-            data : file
-          };
-        
-        const response = axios.request(config)
-        .then((response) => {
-            d["resume"] = response.data["filename"]
-            console.log(d);
-            axios.put(`http://127.0.0.1:8000/user/${data["email"]}`,d).then((res)=>{
-                console.log(res)
-                if(res.status===200)
-                    navigate('/profile')
-            })
-                    
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-        console.log(response)
+            let config = {
+                method: "post",
+                maxBodyLength: Infinity,
+                url: `http://127.0.0.1:8000/user/uploadResume/${data["email"]}`,
+                data: file,
+            };
+
+            const response = axios
+                .request(config)
+                .then((response) => {
+                    d["resume"] = response.data["filename"];
+                    console.log(d);
+                    axios
+                        .put(`http://127.0.0.1:8000/user/${data["email"]}`, d)
+                        .then((res) => {
+                            console.log(res);
+                            if (res.status === 200) navigate("/profile");
+                        });
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else {
+            axios
+                .put(`http://127.0.0.1:8000/user/${data["email"]}`, d)
+                .then((res) => {
+                    console.log(res);
+                    if (res.status === 200) navigate("/profile");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
         // if(response.status === 200)
         //     navigate('/profile')
-    }
-
+    };
+    const handleDateChange = (e) => {
+        setStartDate(e.target.value);
+        setData((data) => ({
+            ...data,
+            graduating_year: e.target.value,
+        }));
+    };
+    console.log(startDate);
     const [value, setValue] = useState(null);
     return (
         <>
@@ -4707,100 +4727,119 @@ const EditProfile = () => {
                 <Card
                     style={{
                         padding: "1.5rem",
-                        marginBottom:"3rem"
+                        marginBottom: "3rem",
                     }}
                 >
-                    {data && data["name"]?(<><Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Name</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                defaultValue={data["name"]}
-                                style={{
-                                    width: "100%",
-                                }}
-                                type="text"
-                                onChange={(e)=>setData({...data, "name":e.target.value})}
-                                autoComplete="post-title"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            // value={data.data.email}
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Email</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                defaultValue={data["email"]}
-                                style={{
-                                    width: "100%",
-                                }}
-                                type="text"
-                                disabled
-                                autoComplete="post-title"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Graduating Year</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            {/* <LocalizationProvider
+                    {data && data["name"] ? (
+                        <>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Name</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <TextField
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        defaultValue={data["name"]}
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        type="text"
+                                        onChange={(e) =>
+                                            setData({
+                                                ...data,
+                                                name: e.target.value,
+                                            })
+                                        }
+                                        autoComplete="post-title"
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    // value={data.data.email}
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Email</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <TextField
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        defaultValue={data["email"]}
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        type="text"
+                                        disabled
+                                        autoComplete="post-title"
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Graduating Year</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    {/* <LocalizationProvider
                                 style={{
                                     width: "100%",
                                 }}
                                 dateAdapter={DateAdapter}
                             > */}
-                            {/* <DatePicker
+                                    {/* <DatePicker
                                     views={["year"]}
                                     value={value}
                                     minDate={moment()}
@@ -4812,8 +4851,8 @@ const EditProfile = () => {
                                         <TextField {...params} />
                                     )}
                                 /> */}
-                            {/* </LocalizationProvider> */}
-                            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    {/* </LocalizationProvider> */}
+                                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer
                                     components={["DatePicker", "DatePicker"]}
                                 >
@@ -4823,82 +4862,111 @@ const EditProfile = () => {
                                     />
                                 </DemoContainer>
                             </LocalizationProvider> */}
-                            <DatePicker
+                                    {/* <DatePicker
                                 selected={startDate}
-                                onChange={(date) => setStartDate(date)}
+                                onChange={(e) => setStartDate(e)}
                                 showYearPicker
                                 dateFormat="yyyy"
-                            />
-                        </Grid>
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Degree Pursuing</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                selected={data["degree"]}
-                                style={{
-                                    width: "100%",
-                                }}
-                                type="text"
-                                onChange={(e)=>setData({...data, "degree":e.target.value})}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Current College</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <Autocomplete
-                                freeSolo
-                                id="free-solo-2-demo"
-                                disableClearable
-                                options={Colleges.map(
-                                    (option) => option.college
-                                )}
-                                renderInput={(params) => (
+                            /> */}
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={data["graduating_year"]}
+                                        // label="Year"
+                                        onChange={handleDateChange}
+                                    >
+                                        <MenuItem value="2023">2023</MenuItem>
+                                        <MenuItem value="2022">2022</MenuItem>
+                                        <MenuItem value="2021">2021</MenuItem>
+                                        <MenuItem value="2021">2021</MenuItem>
+                                        <MenuItem value="2019">2019</MenuItem>
+                                    </Select>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Degree Pursuing</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
                                     <TextField
-                                        {...params}
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            type: "search",
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        value={data["degree"]}
+                                        // selected={startDate}
+                                        style={{
+                                            width: "100%",
                                         }}
-                                        onSelect={(e)=>setData({...data, "college":e.target.value})}
-                                        defaultValue={data["college"]}
+                                        type="text"
+                                        onChange={(e) =>
+                                            setData({
+                                                ...data,
+                                                degree: e.target.value,
+                                            })
+                                        }
                                     />
-                                )}
-                            />
-                            {/* <TextField
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Current College</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <Autocomplete
+                                        freeSolo
+                                        id="free-solo-2-demo"
+                                        disableClearable
+                                        options={Colleges.map(
+                                            (option) => option.college
+                                        )}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                value={data["college"]}
+                                                {...params}
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    type: "search",
+                                                }}
+                                                onSelect={(e) =>
+                                                    setData({
+                                                        ...data,
+                                                        college: e.target.value,
+                                                    })
+                                                }
+                                                defaultValue={data["college"]}
+                                            />
+                                        )}
+                                    />
+                                    {/* <TextField
                                 id="outlined-title-input"
                                 // label="Post Title"
                                 style={{
@@ -4907,200 +4975,263 @@ const EditProfile = () => {
                                 type="text"
                                 autoComplete={Colleges}
                             /> */}
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Resume</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <FileUploader handleChange={handleChange} name="file" multiple={false} types={fileTypes} style={{
-                                    width: "100%",
-                                }}/>
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Linkedin</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                style={{
-                                    width: "100%",
-                                }}
-                                defaultValue={data["linkedin"]}
-                                onChange={(e)=>setData({...data, "linkedin":e.target.value})}
-                                type="text"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Github</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                style={{
-                                    width: "100%",
-                                }}
-                                defaultValue={data["github"]}
-                                type="text"
-                                onChange={(e)=>setData({...data, "github":e.target.value})}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Blogs</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                style={{
-                                    width: "100%",
-                                }}
-                                type="text"
-                                defaultValue={data["blogs"]}
-                                onChange={(e)=>setData({...data, "blogs":e.target.value})}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Website</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                style={{
-                                    width: "100%",
-                                }}
-                                type="text"
-                                defaultValue={data["website"]}
-                                onChange={(e)=>setData({...data, "website":e.target.value})}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Grid
-                            items
-                            md={3}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <div>
-                                <label>Describe Yourself</label>
-                            </div>
-                        </Grid>
-                        <Grid
-                            items
-                            md={9}
-                            style={{
-                                margin: "1rem 0",
-                            }}
-                        >
-                            <TextField
-                                id="outlined-title-input"
-                                // label="Post Title"
-                                style={{
-                                    width: "100%",
-                                }}
-                                type="text"
-                                multiline
-                                defaultValue={data["describe"]}
-                                onChange={(e)=>setData({...data, "describe":e.target.value})}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Button
-                            variant="contained"
-                            style={{
-                                color: "white",
-                                width: "100%",
-                            }}
-                            onClick={updateProfile}
-                        >
-                            Update Profile
-                        </Button>
-                    </Grid></>):<></>}
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Resume</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <FileUploader
+                                        handleChange={handleChange}
+                                        name="file"
+                                        multiple={false}
+                                        types={fileTypes}
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Linkedin</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <TextField
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        defaultValue={data["linkedin"]}
+                                        onChange={(e) =>
+                                            setData({
+                                                ...data,
+                                                linkedin: e.target.value,
+                                            })
+                                        }
+                                        type="text"
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Github</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <TextField
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        defaultValue={data["github"]}
+                                        type="text"
+                                        onChange={(e) =>
+                                            setData({
+                                                ...data,
+                                                github: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Blogs</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <TextField
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        type="text"
+                                        defaultValue={data["blogs"]}
+                                        onChange={(e) =>
+                                            setData({
+                                                ...data,
+                                                blogs: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Website</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <TextField
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        type="text"
+                                        defaultValue={data["website"]}
+                                        onChange={(e) =>
+                                            setData({
+                                                ...data,
+                                                website: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Grid
+                                    items
+                                    md={3}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <div>
+                                        <label>Describe Yourself</label>
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    items
+                                    md={9}
+                                    style={{
+                                        margin: "1rem 0",
+                                    }}
+                                >
+                                    <TextField
+                                        id="outlined-title-input"
+                                        // label="Post Title"
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        type="text"
+                                        multiline
+                                        defaultValue={data["describe"]}
+                                        onChange={(e) =>
+                                            setData({
+                                                ...data,
+                                                describe: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Button
+                                    variant="contained"
+                                    style={{
+                                        color: "white",
+                                        width: "100%",
+                                    }}
+                                    onClick={updateProfile}
+                                >
+                                    Update Profile
+                                </Button>
+                            </Grid>
+                        </>
+                    ) : (
+                        <></>
+                    )}
                 </Card>
             </Container>
         </>

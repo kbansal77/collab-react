@@ -31,15 +31,15 @@ const Discover = () => {
             .get(`http://127.0.0.1:8000/user/${currentUser.email}`)
             .then((res) => {
                 console.log(res.data);
-                // if (
-                //     res.data["college"] === "" ||
-                //     res.data["github"] === "" ||
-                //     res.data["graduating_year"] === "" ||
-                //     res.data["linkedin"] === "" ||
-                //     res.data["resume"] === ""
-                // ) {
-                //     nav("/editprofile");
-                // }
+                if (
+                    res.data["college"] === "" ||
+                    res.data["github"] === "" ||
+                    res.data["graduating_year"] === "" ||
+                    res.data["linkedin"] === "" ||
+                    res.data["resume"] === ""
+                ) {
+                    nav("/editprofile");
+                }
                 setUserData(res.data);
             })
             .catch((e) => {
