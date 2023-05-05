@@ -20,7 +20,7 @@ const LandingPage = () => {
         e.preventDefault();
         const user = await Gsignup();
         console.log(user)
-        if(user.user) navigate("/discover");
+        if(user && user.user) navigate("/discover");
     }
 
     return (
