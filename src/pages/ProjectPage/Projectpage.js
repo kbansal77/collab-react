@@ -17,7 +17,7 @@ import {
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
@@ -80,6 +80,27 @@ const Projectpage = ({ handleData }) => {
             });
     };
     handleData(data);
+
+    const handleCellClick = (e) => {
+        console.log(e);
+        const field = e["field"];
+        const value = e["formattedValue"];
+        if (
+            field === "github" ||
+            field === "linkedin" ||
+            field === "blogs" ||
+            field === "website"
+        ) {
+            if (value) {
+                window.location = value;
+            }
+        }
+        // if(field === "match"){
+        //     axios.get(`http://127.0.0.1:8000/user/getResume/${e["row"]["email"]}`).then(data=>{
+        //         console.log("data",data)
+        //     })
+        // }
+    };
 
     const handleSavePost = () => {
         axios
@@ -352,13 +373,16 @@ const Projectpage = ({ handleData }) => {
                                 {viewApplicants && applicantsData ? (
                                     <div style={{ height: 400, width: "100%" }}>
                                         <DataGrid
+                                            // slots={{ toolbar: GridToolbar }}
                                             rows={applicantsData}
                                             columns={columns}
                                             paginationModel={{
                                                 page: 0,
                                                 pageSize: 5,
                                             }}
-                                            checkboxSelection
+                                            onCellClick={handleCellClick}
+                                            pageSizeOptions={[5, 10]}
+                                            // checkboxSelection
                                         />
                                     </div>
                                 ) : (
