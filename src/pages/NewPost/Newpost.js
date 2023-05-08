@@ -655,7 +655,7 @@ const NewPost = () => {
                                     }}
                                 >
                                     <label className="formHeading">
-                                        Hackathon Duration
+                                        Hackathon Duration (hours)
                                     </label>
                                 </Grid>
                                 <Grid
@@ -835,7 +835,7 @@ const NewPost = () => {
                                     }}
                                 >
                                     <label className="formHeading">
-                                        Internship Duration
+                                        Internship Duration (months)
                                     </label>
                                 </Grid>
                                 <Grid
@@ -933,7 +933,7 @@ const NewPost = () => {
                                     }}
                                 >
                                     <label className="formHeading">
-                                        Stipend
+                                        Stipend (per month)
                                     </label>
                                 </Grid>
                                 <Grid

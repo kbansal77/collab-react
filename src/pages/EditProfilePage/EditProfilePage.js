@@ -4944,6 +4944,7 @@ const EditProfile = () => {
                                     <Autocomplete
                                         freeSolo
                                         id="free-solo-2-demo"
+                                        defaultValue={data["college"]}
                                         disableClearable
                                         options={Colleges.map(
                                             (option) => option.college

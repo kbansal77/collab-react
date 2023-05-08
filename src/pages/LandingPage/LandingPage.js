@@ -18,9 +18,8 @@ const LandingPage = () => {
 
     async function loginhandler(e) {
         e.preventDefault();
-        const user = await Gsignup();
-        console.log(user)
-        if(user && user.user) navigate("/discover");
+        await Gsignup()
+        navigate("/discover");
     }
 
     return (

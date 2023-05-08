@@ -66,9 +66,9 @@ const EditPost = ({postData}) => {
     const [postType, setPostType] = useState(postData["post_type"]);
     const [value, setValue] = useState(postData["college"]);
     const [val, setVal] = useState(postData["batch"]);
-    const [venue, setVenue] = useState("");
-    const [stipend, setStipend] = useState("");
-    const [jobOffer, setJobOffer] = useState("");
+    const [venue, setVenue] = useState(postData["hackathon_venue"]);
+    const [stipend, setStipend] = useState(postData["internship_stipend"]);
+    const [jobOffer, setJobOffer] = useState(postData["job_offer"]);
     
     const { currentUser } = useAuth();
     const minDate = new Date();
@@ -81,17 +81,17 @@ const EditPost = ({postData}) => {
     const [isloading, setIsLoading] = useState(false);
     let post_title =""
 
-    const [postTitle, setPostTitle] = useState("");
-    const [postCover, setPostCover] = useState("");
+    const [postTitle, setPostTitle] = useState(postData["title"]);
+    const [postCover, setPostCover] = useState(postData["cover"]);
     const [documentLink, setDocumentLink] = useState(postData["document_link"]);
-    const [duration, setDuration] = useState("")
-    const [teamSize, setTeamSize] = useState();
-    const [startingDate, setStartingDate] = useState()
-    const [websiteLink, setWebsiteLink] = useState("")
-    const [roleName, setRoleName] = useState("")
-    const [roleDescription,setRoleDescription] = useState("")
+    const [duration, setDuration] = useState(postData["hackathon_duration"])
+    const [teamSize, setTeamSize] = useState(postData["team_size"]);
+    const [startingDate, setStartingDate] = useState(postData["hackathon_starting_date"])
+    const [websiteLink, setWebsiteLink] = useState(postData["hackathon_website"])
+    const [roleName, setRoleName] = useState(postData["role_name"])
+    const [roleDescription,setRoleDescription] = useState(postData["role_description"])
 
-    const [projectDescription, setProjectDescription] = useState("")
+    const [projectDescription, setProjectDescription] = useState(postData["project_description"])
     const startMaxDate = new Date();
     startMaxDate.setDate(startMaxDate.getDate() + 100);
     // useEffect(() => {
@@ -100,6 +100,10 @@ const EditPost = ({postData}) => {
 
     //     // setData(response)
     // }, []);
+
+    // useEffect(()=>{
+    //     setPostTitle[postData["title"]]
+    // }, [postData])
 
     // const getData = () => {
     //     axios
@@ -260,6 +264,7 @@ const EditPost = ({postData}) => {
                         >
                             <TextField
                                 id="outlined-title-input"
+                                value={postTitle}
                                 // label="Post Title"
                                 style={{
                                     width: "100%",
@@ -288,6 +293,7 @@ const EditPost = ({postData}) => {
                         >
                             <TextField
                                 id="outlined-cover-input"
+                                value={postCover}
                                 style={{
                                     width: "100%",
                                 }}
@@ -509,6 +515,7 @@ const EditPost = ({postData}) => {
                                     width: "100%",
                                 }}
                                 type="number"
+                                value={teamSize}
                                 onChange={(e) => setTeamSize(e.target.value)}
                             />
                         </Grid>
@@ -538,6 +545,7 @@ const EditPost = ({postData}) => {
                                     width: "100%",
                                 }}
                                 type="text"
+                                value={projectDescription}
                                 onChange={(e)=>setProjectDescription(e.target.value)}
                                 multiline
                             />
@@ -565,6 +573,7 @@ const EditPost = ({postData}) => {
                                 style={{
                                     width: "100%",
                                 }}
+                                value={roleName}
                                 onChange={(e)=>setRoleName(e.target.value)}
                                 type="text"
                             />
@@ -594,6 +603,7 @@ const EditPost = ({postData}) => {
                                 style={{
                                     width: "100%",
                                 }}
+                                value={roleDescription}
                                 onChange={(e)=>setRoleDescription(e.target.value)}
                                 type="text"
                                 multiline
@@ -702,18 +712,20 @@ const EditPost = ({postData}) => {
                                     }}
                                 >
                                     <label className="formHeading">
-                                        Hackathon Duration
+                                        Hackathon Duration (hours)
                                     </label>
                                 </Grid>
                                 <Grid
                                     items
                                     md={3}
-                                    onChange={(e)=>setDuration(e)}
+                                    
                                     style={{
                                         margin: "1rem 0",
                                     }}
                                 >
                                     <TextField
+                                        value={duration}
+                                        onChange={(e)=>setDuration(e)}
                                         id="outlined-cover-input"
                                         style={{
                                             width: "100%",
@@ -750,6 +762,7 @@ const EditPost = ({postData}) => {
                                         style={{
                                             width: "100%",
                                         }}
+                                        value={websiteLink}
                                         onChange={(e)=>setWebsiteLink(e.target.value)}
                                         type="text"
                                     />
@@ -757,7 +770,7 @@ const EditPost = ({postData}) => {
                             </Grid>
                             <Grid
                                 container
-                                justifyContent="center"
+                                justifyContent="flex-start"
                                 alignItems="center"
                             >
                                 <Grid
@@ -810,6 +823,7 @@ const EditPost = ({postData}) => {
                                             style={{
                                                 width: "50%",
                                             }}
+                                            value={venue}
                                             onChange={(e) =>
                                                 setVenue(e.target.value)
                                             }
@@ -882,7 +896,7 @@ const EditPost = ({postData}) => {
                                     }}
                                 >
                                     <label className="formHeading">
-                                        Internship Duration
+                                        Internship Duration (months)
                                     </label>
                                 </Grid>
                                 <Grid
@@ -894,6 +908,7 @@ const EditPost = ({postData}) => {
                                 >
                                     <TextField
                                         id="outlined-cover-input"
+                                        value={duration}
                                         onChange={(e)=>setDuration(e)}
                                         style={{
                                             width: "100%",
@@ -904,7 +919,7 @@ const EditPost = ({postData}) => {
                             </Grid>
                             <Grid
                                 container
-                                justifyContent="center"
+                                justifyContent="flex-start"
                                 alignItems="center"
                             >
                                 <Grid
@@ -957,6 +972,7 @@ const EditPost = ({postData}) => {
                                             style={{
                                                 width: "50%",
                                             }}
+                                            value={venue}
                                             onChange={(e) =>
                                                 setVenue(e.target.value)
                                             }
@@ -969,7 +985,7 @@ const EditPost = ({postData}) => {
                             </Grid>
                             <Grid
                                 container
-                                justifyContent="center"
+                                justifyContent="flex-start"
                                 alignItems="center"
                             >
                                 <Grid
@@ -980,7 +996,7 @@ const EditPost = ({postData}) => {
                                     }}
                                 >
                                     <label className="formHeading">
-                                        Stipend
+                                        Stipend (per month)
                                     </label>
                                 </Grid>
                                 <Grid
@@ -1022,6 +1038,7 @@ const EditPost = ({postData}) => {
                                             style={{
                                                 width: "50%",
                                             }}
+                                            value={stipend}
                                             onChange={(e) =>
                                                 setStipend(e.target.value)
                                             }
@@ -1034,7 +1051,7 @@ const EditPost = ({postData}) => {
                             </Grid>
                             <Grid
                                 container
-                                justifyContent="center"
+                                justifyContent="flex-start"
                                 alignItems="center"
                             >
                                 <Grid
