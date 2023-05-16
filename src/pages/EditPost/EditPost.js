@@ -166,15 +166,15 @@ const EditPost = ({postData}) => {
             hackathon_duration: duration,
             hackathon_website: websiteLink,
             hackathon_venue: venue,
-            saved_by: [],
-            applied_by: [],
-            created_by: currentUser.email,
-            created_at: new Date(),
+            saved_by: postData["saved_by"],
+            applied_by: postData["applied_by"],
+            created_by: postData["created_by"],
+            created_at: postData["created_at"],
         };
             console.log(data)
-            const response = await axios.post("http://127.0.0.1:8000/post/", data);
+            const response = await axios.put(`http://127.0.0.1:8000/post/${postData["id"]}`, data);
             if(response.status === 200)
-                navigate('/discover')
+                navigate(-1)
         }
         catch (error) {
             console.error(error);

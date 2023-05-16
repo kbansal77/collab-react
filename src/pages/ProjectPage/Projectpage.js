@@ -66,6 +66,14 @@ const Projectpage = ({ handleData }) => {
 
         // setData(response)
     }, []);
+    // useEffect(()=>{
+    //     addLineBreaks(data["project_description"])
+    //     addLineBreaks(data["role_description"])
+    // }, [data])
+
+    const addLineBreaks =(string) =>{
+        return string.split('\n').map(str => <p className="justify">{str}</p>)
+    }
 
     const getData = () => {
         axios
@@ -422,13 +430,13 @@ const Projectpage = ({ handleData }) => {
                                                     Project Discription
                                                 </strong>
                                                 <div>
-                                                    <p className="justify">
+                                                    {/* <p className="justify"> */}
                                                         {
-                                                            data[
+                                                            addLineBreaks(data[
                                                                 "project_description"
-                                                            ]
+                                                            ])
                                                         }
-                                                    </p>
+                                                    {/* </p> */}
                                                 </div>
                                             </Grid>
                                             <Grid container direction="column">
@@ -442,13 +450,14 @@ const Projectpage = ({ handleData }) => {
                                                     Role Description
                                                 </span>
                                                 <div>
-                                                    <p className="justify">
-                                                        {
-                                                            data[
+                                                    
+                                                    {/* <p className="justify"> */}
+                                                    {
+                                                            addLineBreaks(data[
                                                                 "role_description"
-                                                            ]
+                                                            ])
                                                         }
-                                                    </p>
+                                                    {/* </p> */}
                                                 </div>
                                                 {data["document_link"] ? (
                                                     <span>
