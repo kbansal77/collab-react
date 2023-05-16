@@ -186,7 +186,7 @@ const EditPost = ({postData}) => {
         setJobOffer(e.target.value);
     };
     const handleToKeyDown = (event) => {
-        if (["Enter", "Tab", ",", " "].includes(event.key)) {
+        if (["Enter", "Tab", ","].includes(event.key)) {
             event.preventDefault();
 
             var value = tovalue.trim();
